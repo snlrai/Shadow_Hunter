@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+.env
+*.env
+*.key
+*.pem
+simulated_vpc_flows.csv
+test_output.txt
+.idea/
+.vscode/

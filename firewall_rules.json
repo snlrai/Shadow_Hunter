@@ -1,0 +1,15 @@
+{
+  "blocked_ips": [
+    "10.0.1.100"
+  ],
+  "rules": [
+    {
+      "ip": "10.0.1.100",
+      "action": "DENY",
+      "reason": "Shadow AI detected - Score 100",
+      "timestamp": "2026-02-18T18:14:08.199794",
+      "service_type": "Unauthorized LLM API",
+      "auto_generated": true
+    }
+  ]
+}
