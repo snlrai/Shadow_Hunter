@@ -9,3 +9,4 @@ networkx>=3.2.1
 fpdf2>=2.7.6
 shap>=0.43.0
 google-generativeai>=0.3.0
+pydantic>=2.0.0

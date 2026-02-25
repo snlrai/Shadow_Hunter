@@ -222,7 +222,7 @@ class ShadowAIDetector:
                 'pps_std': baseline_df['packets_per_second'].std(),
                 'duration_mean': baseline_df['avg_connection_duration'].mean(),
             }
-            print(f"✅ Baseline computed from {len(normal_ips)} normal services")
+            print(f"[SUCCESS] Baseline computed from {len(normal_ips)} normal services")
             print(f"   Normal RX/TX ratio: {self.baseline_stats['rx_tx_ratio_mean']:.2f} ± {self.baseline_stats['rx_tx_ratio_std']:.2f}")
         
     def analyze_traffic(self, df: pd.DataFrame, source_ip: str) -> DetectionResult:
@@ -263,7 +263,7 @@ class ShadowAIDetector:
                         'unique_ports': 0,
                         'external_https_ratio': 0
                     },
-                    recommendation=f"✅ Whitelisted - {db_traffic_ratio*100:.0f}% traffic to database ports (likely legitimate)"
+                    recommendation=f"[OK] Whitelisted - {db_traffic_ratio*100:.0f}% traffic to database ports (likely legitimate)"
                 )
         
         # Extract features
@@ -401,12 +401,12 @@ class ShadowAIDetector:
         if is_shadow_ai:
             triggered_signals = [s.name for s in signals if s.triggered]
             recommendation = (
-                f"⚠️ INVESTIGATE: {len(triggered_signals)} signals match Shadow AI pattern. "
+                f"[ALERT] INVESTIGATE: {len(triggered_signals)} signals match Shadow AI pattern. "
                 f"Check if {source_ip} is authorized to call external AI APIs. "
                 f"Review: {', '.join(triggered_signals[:3])}"
             )
         else:
-            recommendation = "✅ Traffic appears normal - no action needed"
+            recommendation = "[OK] Traffic appears normal - no action needed"
         
         # ---- ML Anomaly Score (if model is trained) ----
         ml_anomaly_result = None
@@ -419,7 +419,7 @@ class ShadowAIDetector:
                 if is_shadow_ai:
                     confidence = "Medium"
                     recommendation = (
-                        f"⚠️ ML ANOMALY: Heuristics scored {total_score - 15}, but ML model "
+                        f"[ANOMALY] ML ANOMALY: Heuristics scored {total_score - 15}, but ML model "
                         f"flagged unusual behavior. Top signals: "
                         f"{', '.join(ml_anomaly_result.top_contributing_features)}"
                     )
@@ -475,7 +475,7 @@ class ShadowAIDetector:
             # Update recommendation with specific provider info
             if is_shadow_ai:
                 recommendation = (
-                    f"🚨 CONFIRMED: Unauthorized **{ti_provider}** ({ti_service}) access detected from {source_ip}. "
+                    f"[CRITICAL] CONFIRMED: Unauthorized **{ti_provider}** ({ti_service}) access detected from {source_ip}. "
                     f"Data risk: {ti_data_risk}. "
                     f"Compliance impact: {', '.join(ti_compliance)}. "
                     f"Triggered signals: {', '.join([s.name for s in signals if s.triggered][:3])}"
@@ -518,14 +518,14 @@ class ShadowAIDetector:
         output.append(f"Source IP: {result.source_ip}")
         output.append(f"Timestamp: {result.timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
         output.append(f"Total Score: {result.total_score}/100")
-        output.append(f"Classification: {'🚨 SHADOW AI DETECTED' if result.is_shadow_ai else '✅ Normal Traffic'}")
+        output.append(f"Classification: {'[ALERT] SHADOW AI DETECTED' if result.is_shadow_ai else '[OK] Normal Traffic'}")
         output.append(f"Confidence: {result.confidence}")
         output.append("")
         
         output.append("SIGNAL BREAKDOWN:")
         output.append("-" * 80)
         for signal in result.signals:
-            status = "✓" if signal.triggered else "✗"
+            status = "[Yes]" if signal.triggered else "[No]"
             output.append(f"{status} {signal.name:20} | Score: {signal.score:3}/100 | {signal.explanation}")
         
         output.append("")
@@ -562,9 +562,9 @@ class ShadowAIDetector:
         if len(feature_dicts) >= 3:  # Need minimum data
             self.ml_detector.train(feature_dicts)
             self._ml_trained = True
-            print(f"✅ ML model trained on {len(feature_dicts)} sources")
+            print(f"[SUCCESS] ML model trained on {len(feature_dicts)} sources")
         else:
-            print("⚠️ Not enough data to train ML model (need >= 3 sources)")
+            print("[WARNING] Not enough data to train ML model (need >= 3 sources)")
 
     def train_autoencoder(self, df: pd.DataFrame, all_ips: List[str]):
         """
@@ -582,7 +582,7 @@ class ShadowAIDetector:
             self._ae_trained = True
             return stats
         else:
-            print("⚠️ Not enough data to train autoencoder (need >= 3 sources)")
+            print("[WARNING] Not enough data to train autoencoder (need >= 3 sources)")
             return None
 
 

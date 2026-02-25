@@ -1,11 +1,30 @@
+# Virtual environment
 venv/
+
+# Python cache
 __pycache__/
 *.pyc
+
+# Secrets & credentials
 .env
 *.env
 *.key
 *.pem
+
+# Database files (runtime-generated)
+*.db
+
+# Generated/runtime data files
 simulated_vpc_flows.csv
 test_output.txt
+firewall_rules.json
+staged_files.txt
+
+# Reference & documentation (private)
+Master_Reference.md
+Shadow_Hunter_Deep_Dive.md
+Shadow_Hunter_Deep_Dive_v3.md
+
+# IDE
 .idea/
 .vscode/

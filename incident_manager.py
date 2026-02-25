@@ -195,11 +195,11 @@ class IncidentManager:
             f"Verify if {provider} usage is authorized by security policy",
         ]
         if severity in ("CRITICAL", "HIGH"):
-            actions.insert(0, f"🚨 IMMEDIATE: Block {ip} via firewall rules")
+            actions.insert(0, f"[CRITICAL] IMMEDIATE: Block {ip} via firewall rules")
             actions.append("Escalate to SOC Level 3 for forensic analysis")
             actions.append("Check for data exfiltration in outbound payloads")
         if severity == "CRITICAL":
-            actions.insert(1, "🔴 Notify CISO within 15 minutes (SLA requirement)")
+            actions.insert(1, "[CRITICAL] Notify CISO within 15 minutes (SLA requirement)")
         actions.append("Document findings in incident tracking system")
         return actions
 
